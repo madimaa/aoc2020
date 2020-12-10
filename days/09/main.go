@@ -8,11 +8,6 @@ import (
 	"github.com/madimaa/aoc2020/lib"
 )
 
-type instruction struct {
-	op  string
-	arg int
-}
-
 func main() {
 	position := part1()
 	part2(position)
