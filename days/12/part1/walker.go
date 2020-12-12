@@ -5,18 +5,18 @@ import (
 	"fmt"
 )
 
-//Walker todo
+//Walker walker
 type Walker struct {
 	facing     rune
 	posX, posY int
 }
 
-//CreateWalker todo
+//CreateWalker create walker object
 func CreateWalker(x, y int, facing rune) *Walker {
 	return &Walker{posX: x, posY: y, facing: facing}
 }
 
-//Move todo
+//Move moves the ship
 func (w *Walker) Move(direction rune, unit int) {
 	if direction == 'F' {
 		direction = w.facing
@@ -34,7 +34,7 @@ func (w *Walker) Move(direction rune, unit int) {
 	}
 }
 
-//Turn todo
+//Turn turn the ship
 func (w *Walker) Turn(direciton rune, unit int) {
 	steps := unit / 90
 	if direciton == 'L' {
@@ -49,12 +49,12 @@ func (w *Walker) Turn(direciton rune, unit int) {
 	w.facing = rune(direcitons[facing])
 }
 
-//Position todo
+//Position position of the ship
 func (w *Walker) Position() (int, int) {
 	return w.posX, w.posY
 }
 
-//Status todo
+//Status prints ship's position
 func (w *Walker) Status() {
 	fmt.Println(w.posX, w.posY, string(w.facing))
 }
