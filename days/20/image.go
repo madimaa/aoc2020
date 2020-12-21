@@ -12,17 +12,26 @@ type Image struct {
 }
 
 //CreateImage creates image struct
-func CreateImage(id int, input []string) *Image {
+func CreateImage(id int, input []string, withFullImage bool) *Image {
 	e, w := "", ""
 	n := input[0]
 	s := input[len(input)-1]
 	lastCharIndex := len(n) - 1
+	fullImage := make([]string, 0)
 	for _, row := range input {
+		if withFullImage {
+			fullImage = append(fullImage, row[1:len(row)-1])
+		}
+
 		w += string([]rune(row)[0])
 		e += string([]rune(row)[lastCharIndex])
 	}
 
-	return &Image{id: id, n: n, e: e, s: s, w: w}
+	if withFullImage {
+		fullImage = fullImage[1 : len(fullImage)-1]
+	}
+
+	return &Image{id: id, n: n, e: e, s: s, w: w, fullImage: fullImage}
 }
 
 //Print console friendly output
@@ -75,7 +84,14 @@ func (i *Image) Rotate(withFullImage bool) {
 	i.nID = tempID
 
 	if withFullImage {
-		//do something
+		temp := make([]string, len(i.fullImage))
+		for _, row := range i.fullImage {
+			for runeIndex, r := range []rune(row) {
+				temp[runeIndex] = string(r) + temp[runeIndex]
+			}
+		}
+
+		i.fullImage = temp
 	}
 }
 
@@ -94,7 +110,12 @@ func (i *Image) VerticalFlip(withFullImage bool) {
 	i.w = reverseString(i.w)
 
 	if withFullImage {
-		//do something
+		length := len(i.fullImage)
+		temp := make([]string, length)
+		for index := 0; index < length/2; index++ {
+			temp[index] = i.fullImage[length-1-index]
+			temp[length-1-index] = i.fullImage[index]
+		}
 	}
 }
 
@@ -113,7 +134,9 @@ func (i *Image) HorizontalFlip(withFullImage bool) {
 	i.s = reverseString(i.s)
 
 	if withFullImage {
-		//do something
+		for index, row := range i.fullImage {
+			i.fullImage[index] = reverseString(row)
+		}
 	}
 }
 
