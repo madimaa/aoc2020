@@ -60,11 +60,21 @@ func part1() {
 		}
 	}
 
+	// for _, img := range images {
+	// 	img.Print()
+	// }
+
+	buildPicture(images, int(pictureSize)*4, storage)
+	result := 1
 	for _, img := range images {
-		img.Print()
+		if img.IsCorner() {
+			fmt.Println(img.id)
+			result *= img.id
+		}
 	}
 
-	fmt.Println("Result: ", pictureSize, len(images))
+	fmt.Println("Result: ", result)
+
 	lib.Elapsed()
 }
 
@@ -89,15 +99,15 @@ func determineBoundaries(input []string) (int, int) {
 	return x, y
 }
 
-func readImages(input []string, xBound, yBound int) []*Image {
-	images := make([]*Image, 0)
+func readImages(input []string, xBound, yBound int) map[int]*Image {
+	images := make(map[int]*Image)
 
 	for i := 0; i < len(input); i++ {
 		keyString := strings.TrimLeft(input[i], "Title ")
 		keyString = keyString[:len(keyString)-1]
 		key, _ := strconv.Atoi(keyString)
 		i++
-		images = append(images, CreateImage(key, input[i:i+yBound]))
+		images[key] = CreateImage(key, input[i:i+yBound])
 		i += yBound
 	}
 
@@ -115,4 +125,184 @@ func registerPair(img *Image, id int, str string) {
 	case img.w:
 		img.wID = id
 	}
+}
+
+func buildPicture(images map[int]*Image, numberOfEdges int, storage map[string]*Image) *Space {
+	foundEdges := 0
+
+	space := CreateSpace()
+	recentlyPutIntoSpace := make([]*Image, 0)
+	recentHelper := make(map[int]bool)
+	start := findCompletedSegment(images)
+	space.Put(0, 0, start)
+	recentlyPutIntoSpace = append(recentlyPutIntoSpace, start)
+	recentHelper[start.id] = true
+	placed := make(map[int]bool)
+	for foundEdges != numberOfEdges {
+		actual := recentlyPutIntoSpace[0]
+		placed[actual.id] = true
+		recentlyPutIntoSpace = recentlyPutIntoSpace[1:]
+		delete(recentHelper, actual.id)
+		switch actual.nID {
+		case 0:
+			rev := reverseString(actual.n)
+			if img, ok := storage[rev]; ok && img != actual {
+				actual.nID = img.id
+			} else if img, ok := storage[actual.n]; ok && img != actual {
+				actual.nID = img.id
+			} else {
+				foundEdges++
+				break
+			}
+
+			fallthrough
+		default:
+			other := images[actual.nID]
+			if !placed[other.id] {
+				space.Put(start.spaceX, start.spaceY-1, other)
+				if _, ok := recentHelper[other.id]; !ok {
+					recentlyPutIntoSpace = append(recentlyPutIntoSpace, other)
+					recentHelper[other.id] = true
+				}
+				counter := 0
+				for other.s != actual.n {
+					switch counter % 5 {
+					case 0:
+						other.Rotate()
+					case 1, 2:
+						other.HorizontalFlip()
+					case 3, 4:
+						other.VerticalFlip()
+					}
+					counter++
+				}
+
+				other.sID = actual.id
+			}
+		}
+		switch actual.eID {
+		case 0:
+			rev := reverseString(actual.e)
+			if img, ok := storage[rev]; ok && img != actual {
+				actual.eID = img.id
+			} else if img, ok := storage[actual.e]; ok && img != actual {
+				actual.eID = img.id
+			} else {
+				foundEdges++
+				break
+			}
+
+			fallthrough
+		default:
+			other := images[actual.eID]
+			if !placed[other.id] {
+				space.Put(start.spaceX+1, start.spaceY, other)
+				if _, ok := recentHelper[other.id]; !ok {
+					recentlyPutIntoSpace = append(recentlyPutIntoSpace, other)
+					recentHelper[other.id] = true
+				}
+				counter := 0
+				for other.w != actual.e {
+					switch counter % 5 {
+					case 0:
+						other.Rotate()
+					case 1, 2:
+						other.HorizontalFlip()
+					case 3, 4:
+						other.VerticalFlip()
+					}
+					counter++
+				}
+
+				other.wID = actual.id
+			}
+		}
+		switch actual.sID {
+		case 0:
+			rev := reverseString(actual.s)
+			if img, ok := storage[rev]; ok && img != actual {
+				actual.sID = img.id
+			} else if img, ok := storage[actual.s]; ok && img != actual {
+				actual.sID = img.id
+			} else {
+				foundEdges++
+				break
+			}
+
+			fallthrough
+		default:
+			other := images[actual.sID]
+			if !placed[other.id] {
+				space.Put(start.spaceX, start.spaceY+1, other)
+				if _, ok := recentHelper[other.id]; !ok {
+					recentlyPutIntoSpace = append(recentlyPutIntoSpace, other)
+					recentHelper[other.id] = true
+				}
+				counter := 0
+				for other.n != actual.s {
+					switch counter % 5 {
+					case 0:
+						other.Rotate()
+					case 1, 2:
+						other.HorizontalFlip()
+					case 3, 4:
+						other.VerticalFlip()
+					}
+					counter++
+				}
+
+				other.nID = actual.id
+			}
+		}
+		switch actual.wID {
+		case 0:
+			rev := reverseString(actual.w)
+			if img, ok := storage[rev]; ok && img != actual {
+				actual.wID = img.id
+			} else if img, ok := storage[actual.w]; ok && img != actual {
+				actual.wID = img.id
+			} else {
+				foundEdges++
+				break
+			}
+
+			fallthrough
+		default:
+			other := images[actual.wID]
+			if !placed[other.id] {
+				space.Put(start.spaceX-1, start.spaceY, other)
+				if _, ok := recentHelper[other.id]; !ok {
+					recentlyPutIntoSpace = append(recentlyPutIntoSpace, other)
+					recentHelper[other.id] = true
+				}
+				counter := 0
+				for other.e != actual.w {
+					switch counter % 5 {
+					case 0:
+						other.Rotate()
+					case 1, 2:
+						other.HorizontalFlip()
+					case 3, 4:
+						other.VerticalFlip()
+					}
+					counter++
+				}
+
+				other.eID = actual.id
+			}
+		}
+	}
+
+	fmt.Println(foundEdges)
+	return space
+}
+
+func findCompletedSegment(images map[int]*Image) *Image {
+	for _, img := range images {
+		if img.IsDone() {
+			return img
+		}
+	}
+
+	panic("This is awkward. :|")
 }

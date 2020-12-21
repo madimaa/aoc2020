@@ -7,6 +7,7 @@ type Image struct {
 	id                 int
 	n, e, s, w         string
 	nID, eID, sID, wID int
+	spaceX, spaceY     int
 }
 
 //CreateImage creates image struct
@@ -31,6 +32,28 @@ func (i *Image) Print() {
 //IsDone check finished tile
 func (i *Image) IsDone() bool {
 	return i.nID != 0 && i.eID != 0 && i.sID != 0 && i.wID != 0
+}
+
+//IsCorner check tile is a corner
+func (i *Image) IsCorner() bool {
+	corners := 0
+	if i.nID != 0 {
+		corners++
+	}
+
+	if i.eID != 0 {
+		corners++
+	}
+
+	if i.sID != 0 {
+		corners++
+	}
+
+	if i.wID != 0 {
+		corners++
+	}
+
+	return corners == 2
 }
 
 //Rotate rotate the image
