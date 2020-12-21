@@ -116,6 +116,8 @@ func (i *Image) VerticalFlip(withFullImage bool) {
 			temp[index] = i.fullImage[length-1-index]
 			temp[length-1-index] = i.fullImage[index]
 		}
+
+		i.fullImage = temp
 	}
 }
 
