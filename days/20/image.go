@@ -8,6 +8,7 @@ type Image struct {
 	n, e, s, w         string
 	nID, eID, sID, wID int
 	spaceX, spaceY     int
+	fullImage          []string
 }
 
 //CreateImage creates image struct
@@ -57,7 +58,7 @@ func (i *Image) IsCorner() bool {
 }
 
 //Rotate rotate the image
-func (i *Image) Rotate() {
+func (i *Image) Rotate(withFullImage bool) {
 	temp := i.w
 	tempID := i.wID
 
@@ -72,10 +73,14 @@ func (i *Image) Rotate() {
 
 	i.n = reverseString(temp)
 	i.nID = tempID
+
+	if withFullImage {
+		//do something
+	}
 }
 
 //VerticalFlip vertically flip the image
-func (i *Image) VerticalFlip() {
+func (i *Image) VerticalFlip(withFullImage bool) {
 	temp := i.s
 	tempID := i.sID
 
@@ -87,10 +92,14 @@ func (i *Image) VerticalFlip() {
 
 	i.e = reverseString(i.e)
 	i.w = reverseString(i.w)
+
+	if withFullImage {
+		//do something
+	}
 }
 
 //HorizontalFlip horizontally flip the image
-func (i *Image) HorizontalFlip() {
+func (i *Image) HorizontalFlip(withFullImage bool) {
 	temp := i.w
 	tempID := i.wID
 
@@ -102,6 +111,10 @@ func (i *Image) HorizontalFlip() {
 
 	i.n = reverseString(i.n)
 	i.s = reverseString(i.s)
+
+	if withFullImage {
+		//do something
+	}
 }
 
 func reverseString(in string) string {

@@ -60,15 +60,10 @@ func part1() {
 		}
 	}
 
-	// for _, img := range images {
-	// 	img.Print()
-	// }
-
 	buildPicture(images, int(pictureSize)*4, storage)
 	result := 1
 	for _, img := range images {
 		if img.IsCorner() {
-			fmt.Println(img.id)
 			result *= img.id
 		}
 	}
@@ -168,11 +163,11 @@ func buildPicture(images map[int]*Image, numberOfEdges int, storage map[string]*
 				for other.s != actual.n {
 					switch counter % 5 {
 					case 0:
-						other.Rotate()
+						other.Rotate(false)
 					case 1, 2:
-						other.HorizontalFlip()
+						other.HorizontalFlip(false)
 					case 3, 4:
-						other.VerticalFlip()
+						other.VerticalFlip(false)
 					}
 					counter++
 				}
@@ -205,11 +200,11 @@ func buildPicture(images map[int]*Image, numberOfEdges int, storage map[string]*
 				for other.w != actual.e {
 					switch counter % 5 {
 					case 0:
-						other.Rotate()
+						other.Rotate(false)
 					case 1, 2:
-						other.HorizontalFlip()
+						other.HorizontalFlip(false)
 					case 3, 4:
-						other.VerticalFlip()
+						other.VerticalFlip(false)
 					}
 					counter++
 				}
@@ -242,11 +237,11 @@ func buildPicture(images map[int]*Image, numberOfEdges int, storage map[string]*
 				for other.n != actual.s {
 					switch counter % 5 {
 					case 0:
-						other.Rotate()
+						other.Rotate(false)
 					case 1, 2:
-						other.HorizontalFlip()
+						other.HorizontalFlip(false)
 					case 3, 4:
-						other.VerticalFlip()
+						other.VerticalFlip(false)
 					}
 					counter++
 				}
@@ -279,11 +274,11 @@ func buildPicture(images map[int]*Image, numberOfEdges int, storage map[string]*
 				for other.e != actual.w {
 					switch counter % 5 {
 					case 0:
-						other.Rotate()
+						other.Rotate(false)
 					case 1, 2:
-						other.HorizontalFlip()
+						other.HorizontalFlip(false)
 					case 3, 4:
-						other.VerticalFlip()
+						other.VerticalFlip(false)
 					}
 					counter++
 				}
@@ -293,7 +288,6 @@ func buildPicture(images map[int]*Image, numberOfEdges int, storage map[string]*
 		}
 	}
 
-	fmt.Println(foundEdges)
 	return space
 }
 
