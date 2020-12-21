@@ -119,9 +119,6 @@ func part2() {
 	}
 
 	space := buildPicture(images, int(pictureSize)*4, storage, true)
-	// for _, img := range images {
-	// 	img.Print()
-	// }
 	picture := mergePieces(space)
 	monsters := 0
 	counter := 0
@@ -195,8 +192,7 @@ func buildPicture(images map[int]*Image, numberOfEdges int, storage map[string]*
 	space := CreateSpace()
 	recentlyPutIntoSpace := make([]*Image, 0)
 	recentHelper := make(map[int]bool)
-	start := images[3931]
-	fmt.Println(start.id)
+	start := findCompletedSegment(images)
 	space.Put(0, 0, start)
 	recentlyPutIntoSpace = append(recentlyPutIntoSpace, start)
 	recentHelper[start.id] = true
