@@ -3,6 +3,7 @@ package lib
 import (
 	"bufio"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"time"
@@ -39,6 +40,14 @@ func OpenFile(path string) []string {
 	LogOnError(file.Close())
 
 	return fileContent
+}
+
+//OpenFileAsString - Open file from path, return file content as string
+func OpenFileAsString(path string) string {
+	fileContent, err := ioutil.ReadFile(path)
+	PanicOnError(err)
+
+	return string(fileContent)
 }
 
 //Start - set the start timer
