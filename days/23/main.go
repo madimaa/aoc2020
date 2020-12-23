@@ -94,25 +94,16 @@ func play(circle map[int]int, moves, min, max int) map[int]int {
 		num2 := circle[num1]
 		num3 := circle[num2]
 		circle[current] = circle[num3]
-		delete(circle, num1)
-		delete(circle, num2)
-		delete(circle, num3)
 
 		destination := current - 1
-		for {
-			if _, ok := circle[destination]; ok && destination != 0 {
-				break
-			} else {
-				destination--
-				if destination < min {
-					destination = max
-				}
+		for destination == 0 || destination == num1 || destination == num2 || destination == num3 {
+			destination--
+			if destination < min {
+				destination = max
 			}
 		}
 
 		circle[num3] = circle[destination]
-		circle[num2] = num3
-		circle[num1] = num2
 		circle[destination] = num1
 
 		circle[0] = circle[current]
